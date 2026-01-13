@@ -53,7 +53,7 @@ jobs:
     
     - name: Create default config
       run: |
-        Copy-Item config.http.example.json dist\config.json
+        Copy-Item examples\config.http.example.json dist\config.json
     
     
     - name: Upload artifact
