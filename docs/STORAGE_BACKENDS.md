@@ -1,12 +1,17 @@
-# Storage Backend Configuration
+# Storage Backend Configuration / 存储后端配置
 
-## Overview
+[English](#english) | [中文](#chinese)
 
-The screenshot tool supports multiple storage backends for flexibility in different deployment scenarios.
+<a name="english"></a>
+## English
 
-## Configuration
+### Overview
 
-Set the `storage_type` field in `config.json` to choose your backend:
+The screenshot tool supports multiple storage backends for different deployment scenarios.
+
+### Configuration
+
+Set `storage_type` in `config.json`:
 
 - `http` - HTTP/HTTPS API endpoints
 - `s3` - S3-compatible object storage
@@ -14,9 +19,7 @@ Set the `storage_type` field in `config.json` to choose your backend:
 - `sftp` - SSH file transfer
 - `local` - Local filesystem
 
-## HTTP/HTTPS
-
-Standard web API uploads.
+### HTTP/HTTPS
 
 ```json
 {
@@ -31,14 +34,9 @@ Standard web API uploads.
 }
 ```
 
-**Server Requirements:**
-- Accept `multipart/form-data` POST requests
-- Optional API key authentication via `X-API-Key` header
-- Return HTTP 200 on success
+**Requirements:** Accepts `multipart/form-data` POST, returns HTTP 200 on success.
 
-## S3/MinIO
-
-Compatible with AWS S3, MinIO, and other S3-compatible services.
+### S3/MinIO
 
 ```json
 {
@@ -55,26 +53,9 @@ Compatible with AWS S3, MinIO, and other S3-compatible services.
 }
 ```
 
-**Parameters:**
-- `endpoint_url` - S3 endpoint (required for MinIO, optional for AWS)
-- `access_key` - AWS access key ID
-- `secret_key` - AWS secret access key
-- `bucket` - Target bucket name
-- `region` - AWS region (default: us-east-1)
-- `path_prefix` - Optional path prefix for uploaded files
-- `use_ssl` - Use HTTPS (default: true)
+Compatible with AWS S3, MinIO, and other S3-compatible services.
 
-**MinIO Setup:**
-```bash
-docker run -p 9000:9000 -p 9001:9001 \
-    -e "MINIO_ROOT_USER=admin" \
-    -e "MINIO_ROOT_PASSWORD=password" \
-    minio/minio server /data --console-address ":9001"
-```
-
-## FTP/FTPS
-
-Traditional FTP file servers.
+### FTP/FTPS
 
 ```json
 {
@@ -90,17 +71,7 @@ Traditional FTP file servers.
 }
 ```
 
-**Parameters:**
-- `host` - FTP server hostname
-- `port` - Port number (default: 21)
-- `username` - FTP username
-- `password` - FTP password
-- `remote_path` - Remote directory path
-- `use_tls` - Enable FTPS encryption (default: false)
-
-## SFTP
-
-Secure file transfer over SSH.
+### SFTP
 
 ```json
 {
@@ -115,21 +86,9 @@ Secure file transfer over SSH.
 }
 ```
 
-**Using SSH keys:**
-```json
-{
-    "sftp": {
-        "host": "sftp.example.com",
-        "username": "user",
-        "private_key_path": "C:\\Users\\You\\.ssh\\id_rsa",
-        "remote_path": "/screenshots/"
-    }
-}
-```
+**SSH keys:** Use `private_key_path` instead of `password`.
 
-## Local Filesystem
-
-Save directly to local disk. Useful for testing.
+### Local Storage
 
 ```json
 {
@@ -140,42 +99,121 @@ Save directly to local disk. Useful for testing.
 }
 ```
 
-## Dependencies
+### Dependencies
 
-Different backends require different Python packages:
-
-| Backend | Required Package | Installation |
-|---------|-----------------|--------------|
+| Backend | Package | Installation |
+|---------|---------|--------------|
 | HTTP | `requests` | Included |
 | S3 | `boto3` | `pip install boto3` |
 | FTP | Built-in | None |
 | SFTP | `paramiko` | `pip install paramiko` |
 | Local | Built-in | None |
 
-Install all optional dependencies:
-```bash
-pip install -r requirements.txt
+---
+
+<a name="chinese"></a>
+## 中文
+
+### 概述
+
+截图工具支持多种存储后端以适应不同部署场景。
+
+### 配置方法
+
+在`config.json`中设置`storage_type`：
+
+- `http` - HTTP/HTTPS API接口
+- `s3` - S3兼容对象存储
+- `ftp` - FTP/FTPS服务器
+- `sftp` - SSH文件传输
+- `local` - 本地文件系统
+
+### HTTP/HTTPS
+
+```json
+{
+    "storage_type": "http",
+    "http": {
+        "server_url": "https://api.example.com/upload",
+        "api_key": "your-api-key",
+        "max_retries": 3,
+        "timeout_connect": 5,
+        "timeout_read": 10
+    }
+}
 ```
 
-## Switching Backends
+**要求：** 接受`multipart/form-data` POST请求，成功时返回HTTP 200。
 
-To switch between backends, simply update the `storage_type` field in `config.json` and restart the application. No code changes required.
+### S3/MinIO
 
-## Troubleshooting
+```json
+{
+    "storage_type": "s3",
+    "s3": {
+        "endpoint_url": "http://minio.example.com:9000",
+        "access_key": "ACCESS_KEY",
+        "secret_key": "SECRET_KEY",
+        "bucket": "screenshots",
+        "region": "us-east-1",
+        "path_prefix": "daily/",
+        "use_ssl": false
+    }
+}
+```
 
-Check `logs/screenshot_YYYYMMDD.log` for detailed error messages.
+兼容AWS S3、MinIO及其他S3兼容服务。
 
-**S3 Connection Issues:**
-- Verify endpoint URL and credentials
-- Ensure bucket exists and is accessible
-- Check network connectivity
+### FTP/FTPS
 
-**FTP Upload Failures:**
-- Confirm firewall allows port 21 (or configured port)
-- Verify remote path exists or script has permission to create it
-- Check passive mode compatibility
+```json
+{
+    "storage_type": "ftp",
+    "ftp": {
+        "host": "ftp.example.com",
+        "port": 21,
+        "username": "ftpuser",
+        "password": "ftppass",
+        "remote_path": "/screenshots/",
+        "use_tls": false
+    }
+}
+```
 
-**SFTP Authentication:**
-- Ensure SSH key format is correct (RSA recommended)
-- Verify key file permissions
-- Check username and host are correct
+### SFTP
+
+```json
+{
+    "storage_type": "sftp",
+    "sftp": {
+        "host": "sftp.example.com",
+        "port": 22,
+        "username": "user",
+        "password": "pass",
+        "remote_path": "/home/user/screenshots/"
+    }
+}
+```
+
+**SSH密钥：** 使用`private_key_path`代替`password`。
+
+### 本地存储
+
+```json
+{
+    "storage_type": "local",
+    "local": {
+        "save_path": "C:\\Screenshots\\"
+    }
+}
+```
+
+### 依赖包
+
+| 后端 | 包名 | 安装方式 |
+|------|------|----------|
+| HTTP | `requests` | 已包含 |
+| S3 | `boto3` | `pip install boto3` |
+| FTP | 内置 | 无需安装 |
+| SFTP | `paramiko` | `pip install paramiko` |
+| Local | 内置 | 无需安装 |

@@ -1,80 +1,109 @@
-# Antivirus False Positives
+# Antivirus False Positives / 杀毒软件误报
 
-## Why False Positives Occur
+[English](#english) | [中文](#chinese)
 
-Screenshot capture and network upload functionalities can
+<a name="english"></a>
+## English
 
- trigger antivirus heuristics designed to detect spyware behavior.
+### Why False Positives Occur
 
-## Solutions
+Screenshot and network functionality can trigger antivirus heuristics.
 
-### 1. Code Signing Certificate (Most Effective)
+### Solutions
 
-Digital signatures prove software authenticity and integrity.
+**1. Code Signing Certificate (Most Effective)**
 
-**Providers:**
-- DigiCert: ~$200-500/year
-- Sectigo: ~$100-300/year
-- Local providers: varies by region
+Providers: DigiCert (~$200-500/year), Sectigo (~$100-300/year)
 
-**Sign the executable:**
 ```cmd
-signtool sign /f certificate.pfx /p password /t http://timestamp.digicert.com /fd SHA256 ScreenCapture.exe
+signtool sign /f cert.pfx /p password /t http://timestamp.digicert.com ScreenCapture.exe
 ```
 
-**Expected reduction:** 80-95% fewer false positives
+Expected reduction: 80-95%
 
-### 2. Add File Metadata (Free)
+**2. File Metadata (Free)**
 
-Include version information in the executable.
+Already included via `version_info.txt`. Customize as needed.
 
-The project already includes `version_info.txt` which is used during build. Customize company name and description as needed.
+**3. Build Optimizations (Free)**
 
-### 3. Optimize Build Parameters (Free)
+Current build already uses:
+- `--noupx` - No UPX compression
+- `--strip` - Remove debug symbols
+- Version metadata
 
-Current build already implements:
-- `--noupx` - Disables UPX compression (reduces false positives)
-- `--strip` - Removes debug symbols
-- Version metadata inclusion
+**4. Whitelist Submission (Free)**
 
-### 4. Whitelist Submission (Free, Time-Consuming)
+- Windows Defender: https://www.microsoft.com/wdsi/filesubmission
+- Kaspersky: https://opentip.kaspersky.com/
 
-Submit false positive reports to AV vendors:
+Response time: 1-7 days
 
-- **Windows Defender:** https://www.microsoft.com/en-us/wdsi/filesubmission
-- **Kaspersky:** https://opentip.kaspersky.com/
-- **Other vendors:** Check respective vendor websites
-
-Response time: 1-7 days typically
-
-### 5. Alternative: Nuitka (Free, Better Results)
-
-Nuitka compiles Python to C code instead of packaging it.
+**5. Nuitka Compiler (Free, Better)**
 
 ```bash
 pip install nuitka
 nuitka --standalone --onefile --windows-disable-console screenshot_tool.py
 ```
 
-**Expected reduction:** 30-50% fewer false positives vs PyInstaller
+Expected reduction: 30-50% vs PyInstaller
 
-## Recommended Approach
+### Recommended
 
-**For production use:**
-1. Code signing certificate
-2. Keep current optimized build parameters
-3. Submit to AV whitelists if needed
+**Production:** Code signing + current optimizations
 
-**For testing/personal use:**
-1. Add to AV whitelist manually
-2. Use current optimized build
+**Testing:** Manual whitelist addition
 
-## Testing
+---
 
-Upload to VirusTotal (https://www.virustotal.com/) to check detection rates.
+<a name="chinese"></a>
+## 中文
 
-**Note:** VirusTotal shares samples with AV vendors, which may increase future detections. Test locally first when possible.
+### 误报原因
 
-## Legal Reminder
+截图和网络功能可能触发杀毒软件启发式检测。
 
-These techniques are for legitimate software distribution only. Ensure all usage complies with applicable laws and regulations.
+### 解决方案
+
+**1. 代码签名证书（最有效）**
+
+供应商：DigiCert（约$200-500/年）、Sectigo（约$100-300/年）
+
+```cmd
+signtool sign /f cert.pfx /p password /t http://timestamp.digicert.com ScreenCapture.exe
+```
+
+预期降低：80-95%误报率
+
+**2. 文件元数据（免费）**
+
+已通过`version_info.txt`包含。可按需自定义。
+
+**3. 构建优化（免费）**
+
+当前构建已使用：
+- `--noupx` - 不使用UPX压缩
+- `--strip` - 移除调试符号
+- 版本元数据
+
+**4. 白名单申请（免费）**
+
+- Windows Defender: https://www.microsoft.com/wdsi/filesubmission
+- 卡巴斯基: https://opentip.kaspersky.com/
+
+响应时间：1-7天
+
+**5. Nuitka编译器（免费，效果更好）**
+
+```bash
+pip install nuitka
+nuitka --standalone --onefile --windows-disable-console screenshot_tool.py
+```
+
+预期降低：比PyInstaller减少30-50%误报
+
+### 推荐方案
+
+**生产环境：** 代码签名 + 当前优化
+
+**测试使用：** 手动添加白名单
