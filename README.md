@@ -78,15 +78,65 @@ See [BUILD_ON_MACOS.md](docs/BUILD_ON_MACOS.md) for Docker or GitHub Actions sol
 Edit `config.json`:
 
 | Parameter | Description | Default |
-|-----------|-------------|---------|
-| `server_url` | Upload endpoint (HTTP/HTTPS) | - |
-| `api_key` | API authentication key | "" |
+|-----------|-----------|---------|
+| `storage_type` | Storage backend type (http/s3/ftp/sftp/local) | http |
 | `interval_seconds` | Screenshot interval (seconds) | 5 |
 | `jpeg_quality` | JPEG compression quality (1-100) | 70 |
-| `max_retries` | Max upload retry attempts | 3 |
-| `timeout_connect` | Connection timeout (seconds) | 5 |
-| `timeout_read` | Read timeout (seconds) | 10 |
 | `log_level` | Log level (DEBUG/INFO/WARNING/ERROR) | INFO |
+
+### Storage Backend Options
+
+Choose your preferred storage method by setting `storage_type`:
+
+#### HTTP/HTTPS (Default)
+```json
+{
+    "storage_type": "http",
+    "http": {
+        "server_url": "https://your-server.com/upload",
+        "api_key": "your-api-key",
+        "max_retries": 3
+    }
+}
+```
+
+#### S3/MinIO (Object Storage)
+```json
+{
+    "storage_type": "s3",
+    "s3": {
+        "endpoint_url": "http://localhost:9000",
+        "access_key": "minioadmin",
+        "secret_key": "minioadmin",
+        "bucket": "screenshots"
+    }
+}
+```
+
+#### FTP/FTPS
+```json
+{
+    "storage_type": "ftp",
+    "ftp": {
+        "host": "ftp.example.com",
+        "username": "user",
+        "password": "pass",
+        "remote_path": "/screenshots/"
+    }
+}
+```
+
+#### Local File System
+```json
+{
+    "storage_type": "local",
+    "local": {
+        "save_path": "C:\\\\Screenshots\\\\"
+    }
+}
+```
+
+**See [STORAGE_BACKENDS.md](docs/STORAGE_BACKENDS.md) for detailed configuration guide.**
 
 ## 🌐 Server Requirements
 
@@ -163,6 +213,7 @@ See [ANTIVIRUS.md](docs/ANTIVIRUS.md) for detailed solutions.
 
 - [DEPLOYMENT.md](docs/DEPLOYMENT.md) - Detailed deployment guide
 - [TECHNICAL.md](docs/TECHNICAL.md) - Technical implementation details
+- [STORAGE_BACKENDS.md](docs/STORAGE_BACKENDS.md) - **Storage backend configuration guide**
 - [BUILD_ON_MACOS.md](docs/BUILD_ON_MACOS.md) - Cross-platform build guide
 - [ANTIVIRUS.md](docs/ANTIVIRUS.md) - Antivirus solutions
 - [PACKAGING_COMPARISON.md](docs/PACKAGING_COMPARISON.md) - Packaging methods comparison
@@ -239,14 +290,59 @@ chmod +x build.sh
 
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
-| `server_url` | 上传端点URL（HTTP/HTTPS） | - |
-| `api_key` | API认证密钥 | "" |
+| `storage_type` | 存储后端类型 (http/s3/ftp/sftp/local) | http |
 | `interval_seconds` | 截图间隔（秒） | 5 |
 | `jpeg_quality` | JPEG压缩质量（1-100） | 70 |
-| `max_retries` | 上传失败最大重试次数 | 3 |
-| `timeout_connect` | 连接超时（秒） | 5 |
-| `timeout_read` | 读取超时（秒） | 10 |
 | `log_level` | 日志级别 | INFO |
+
+### 存储后端选项
+
+通过设置 `storage_type` 选择存储方式：
+
+#### HTTP/HTTPS（默认）
+```json
+{
+    "storage_type": "http",
+    "http": {
+        "server_url": "https://your-server.com/upload",
+        "api_key": "your-api-key"
+    }
+}
+```
+
+#### S3/MinIO（对象存储）
+```json
+{
+    "storage_type": "s3",
+    "s3": {
+        "endpoint_url": "http://localhost:9000",
+        "bucket": "screenshots"
+    }
+}
+```
+
+#### FTP/FTPS
+```json
+{
+    "storage_type": "ftp",
+    "ftp": {
+        "host": "ftp.example.com",
+        "remote_path": "/screenshots/"
+    }
+}
+```
+
+#### 本地文件系统
+```json
+{
+    "storage_type": "local",
+    "local": {
+        "save_path": "C:\\\\Screenshots\\\\"
+    }
+}
+```
+
+**详细配置说明见 [STORAGE_BACKENDS.md](docs/STORAGE_BACKENDS.md)**
 
 ## ⚠️ 法律声明
 
@@ -271,5 +367,6 @@ chmod +x build.sh
 
 - [部署指南](docs/DEPLOYMENT.md)
 - [技术实现](docs/TECHNICAL.md)
+- [**存储后端配置**](docs/STORAGE_BACKENDS.md)
 - [macOS构建指南](docs/BUILD_ON_MACOS.md)
 - [杀毒软件误报解决方案](docs/ANTIVIRUS.md)

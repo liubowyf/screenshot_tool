@@ -1,0 +1,14 @@
+{
+    "storage_type": "ftp",
+    "interval_seconds": 5,
+    "jpeg_quality": 70,
+    "log_level": "INFO",
+    "ftp": {
+        "host": "ftp.example.com",
+        "port": 21,
+        "username": "ftpuser",
+        "password": "ftppassword",
+        "remote_path": "/screenshots/",
+        "use_tls": false
+    }
+}

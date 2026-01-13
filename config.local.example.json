@@ -1,0 +1,9 @@
+{
+    "storage_type": "local",
+    "interval_seconds": 5,
+    "jpeg_quality": 70,
+    "log_level": "INFO",
+    "local": {
+        "save_path": "C:\\\\Screenshots\\\\"
+    }
+}

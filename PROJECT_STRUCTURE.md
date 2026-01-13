@@ -6,31 +6,35 @@
 screenshot_tool/
 ├── .github/
 │   └── workflows/
-│       └── build-windows.yml    # GitHub Actions自动构建
+│       └── build-windows.yml       # GitHub Actions自动构建
 │
-├── docs/                        # 文档目录
-│   ├── DEPLOYMENT.md            # 部署指南
-│   ├── TECHNICAL.md             # 技术实现详解
-│   ├── BUILD_ON_MACOS.md        # macOS构建指南
-│   ├── ANTIVIRUS.md             # 杀毒软件误报解决
-│   ├── PACKAGING_COMPARISON.md  # 打包方案对比
-│   ├── CROSS_PLATFORM.md        # 跨平台构建说明
-│   └── GITHUB_ACTIONS.md        # GitHub Actions使用教程
+├── docs/                       # 所有文档
+│   ├── DEPLOYMENT.md
+│   ├── TECHNICAL.md
+│   ├── STORAGE_BACKENDS.md     # 存储后端配置指南
+│   ├── BUILD_ON_MACOS.md
+│   ├── ANTIVIRUS.md
+│   ├── PACKAGING_COMPARISON.md
+│   ├── CROSS_PLATFORM.md
+│   └── GITHUB_ACTIONS.md
 │
-├── screenshot_tool.py           # 主程序（核心代码）
-├── config.json                  # 配置文件模板
-├── requirements.txt             # Python依赖
-├── version_info.txt             # Windows exe元数据
+├── screenshot_tool.py          # 主程序
+├── storage_backends.py         # 存储后端模块（新增）
+├── config.json                 # 配置文件
+├── config.*.example.json       # 配置示例（HTTP/S3/FTP/Local）
+├── requirements.txt            # Python依赖
+├── version_info.txt            # exe元数据
 │
-├── build.bat                    # Windows打包脚本
-├── build.sh                     # macOS/Linux打包脚本
-├── build_nuitka.bat             # Windows Nuitka编译脚本
-├── build_nuitka.sh              # macOS/Linux Nuitka编译脚本
-├── build_windows_on_mac.sh      # macOS上构建Windows exe（Docker）
+├── build.bat                   # Windows打包
+├── build.sh                    # macOS/Linux打包
+├── build_nuitka.bat            # Windows Nuitka
+├── build_nuitka.sh             # macOS Nuitka
+├── build_windows_on_mac.sh     # Docker跨平台构建
 │
-├── .gitignore                   # Git忽略规则
-├── LICENSE                      # MIT开源协议
-└── README.md                    # 项目说明（中英双语）
+├── .gitignore                  # Git忽略
+├── LICENSE                     # Apache 2.0协议
+├── README.md                   # 项目说明（中英）
+└── PROJECT_STRUCTURE.md        # 项目结构说明
 ```
 
 ## 🗂️ 文件说明
@@ -39,16 +43,29 @@ screenshot_tool/
 
 - **screenshot_tool.py**: 主程序，包含所有核心功能
   - 截图模块（mss）
-  - 网络上传模块（requests）
-  - 配置管理
   - 日志系统
+  - 配置管理
   - 无感运行控制
+  - 集成存储后端
+
+- **storage_backends.py**: 存储后端模块（新增）
+  - HTTP/HTTPS后端
+  - S3/MinIO后端
+  - FTP/FTPS后端
+  - SFTP后端
+  - 本地文件系统后端
+  - 后端工厂模式
 
 - **config.json**: 配置文件，用户需要修改
-  - 服务器URL
-  - API密钥
-  - 截图间隔
-  - 图片质量等
+  - storage_type: 存储后端类型
+  - 各存储后端的配置块
+  - 截图参数配置
+
+- **config.*.example.json**: 配置示例文件
+  - config.http.example.json - HTTP配置示例
+  - config.s3.example.json - S3/MinIO配置示例
+  - config.ftp.example.json - FTP配置示例
+  - config.local.example.json - 本地存储配置示例
 
 - **requirements.txt**: Python依赖包清单
   - mss（截图）
@@ -75,6 +92,14 @@ screenshot_tool/
   - 内存处理机制
   - 独立运行原理
   - 性能数据
+  
+- **STORAGE_BACKENDS.md**: 存储后端配置指南（新增）
+  - HTTP/HTTPS配置
+  - S3/MinIO配置
+  - FTP/FTPS配置
+  - SFTP配置
+  - 本地存储配置
+  - 切换存储后端方法
   
 - **BUILD_ON_MACOS.md**: macOS构建方案
   - GitHub Actions（推荐）
