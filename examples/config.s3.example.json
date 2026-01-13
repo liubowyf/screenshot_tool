@@ -1,0 +1,15 @@
+{
+    "storage_type": "s3",
+    "interval_seconds": 5,
+    "jpeg_quality": 70,
+    "log_level": "INFO",
+    "s3": {
+        "endpoint_url": "http://localhost:9000",
+        "access_key": "minioadmin",
+        "secret_key": "minioadmin",
+        "bucket": "screenshots",
+        "region": "us-east-1",
+        "path_prefix": "daily/",
+        "use_ssl": false
+    }
+}
