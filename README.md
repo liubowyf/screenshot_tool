@@ -99,8 +99,9 @@ python screenshot_tool.py
 
 # Or build executable
 pip install pyinstaller
-build.bat  # Windows
-./build.sh # Linux/macOS
+cd scripts
+./build.sh  # Linux/macOS
+build.bat   # Windows
 ```
 
 ## Configuration
@@ -458,8 +459,9 @@ python screenshot_tool.py
 
 # 或构建可执行文件
 pip install pyinstaller
-build.bat  # Windows
-./build.sh # Linux/macOS
+cd scripts
+./build.sh  # Linux/macOS
+build.bat   # Windows
 ```
 
 ## 配置

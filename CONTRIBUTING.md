@@ -207,6 +207,11 @@ git checkout -b feature/amazing-feature
 # Test changes
 python screenshot_tool.py
 
+# Build (optional)
+cd scripts
+./build.sh
+cd ..
+
 # Commit changes
 git add .
 git commit -m "feat: add amazing feature"
