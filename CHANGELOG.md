@@ -13,6 +13,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - macOS and Linux support
 - GUI configuration tool
 
+## [1.1.0] - 2026-01-13
+
+### Added
+- **S3/MinIO storage backend** - Support for AWS S3, MinIO, and S3-compatible object storage
+- **FTP/FTPS storage backend** - Support for traditional FTP file servers
+- **SFTP storage backend** - Secure file transfer over SSH
+- **Local filesystem storage** - Save screenshots to local directory
+- **Multi-storage backend architecture** - Flexible storage backend system with factory pattern
+- **Configuration examples** - Example configs for all storage types in `examples/` directory
+- **Chinese-first documentation** - All documentation reorganized with Chinese content before English
+- **Comprehensive storage guide** - Detailed STORAGE_BACKENDS.md documentation
+
+### Changed
+- **Project structure optimization** - Build scripts moved to `scripts/`, examples to `examples/`
+- **Enhanced README** - GitHub badges, FAQ section, roadmap, performance metrics
+- **Improved documentation** - CONTRIBUTING.md, CHANGELOG.md, PROJECT_STRUCTURE.md added
+- **Bilingual documentation** - All docs now support Chinese and English
+
+### Fixed
+- GitHub Actions workflow paths updated for new directory structure
+- .gitignore optimized for better file handling
+
 ## [1.0.0] - 2026-01-13
 
 ### Added
