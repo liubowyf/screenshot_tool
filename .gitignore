@@ -1,15 +1,15 @@
-# 排除目录
-build/
-dist/
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
+*.py[cod]
+*$py.class
 *.so
-*.egg
+.Python
+env/
+venv/
 *.egg-info/
-logs/
+dist/
+build/
+*.spec
 
 # IDE
 .vscode/
@@ -17,16 +17,12 @@ logs/
 *.swp
 *.swo
 
-# PyInstaller
-*.spec
+# Project specific
+config.json
+logs/
+screenshots/
+*.log
 
-# 配置文件（用户特定）
-# config.json  # 不忽略，保留模板
-
-# 测试文件
-test_*.py
-*.jpg
-*.png
-
-# macOS
+# OS
 .DS_Store
+Thumbs.db

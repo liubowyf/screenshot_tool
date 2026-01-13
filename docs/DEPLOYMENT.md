@@ -69,9 +69,22 @@ app.run(host='0.0.0.0', port=5000)
 
 ```bash
 pip install -r requirements.txt pyinstaller
-build.bat  # Windows
-./build.sh  # Linux/macOS
 ```
+
+Windows:
+```cmd
+cd scripts
+build.bat
+```
+
+Linux/macOS:
+```bash
+cd scripts
+chmod +x build.sh
+./build.sh
+```
+
+Output exe will be in `dist/` directory.
 
 ---
 
