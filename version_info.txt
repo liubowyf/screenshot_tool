@@ -23,7 +23,7 @@ VSVersionInfo(
         StringStruct(u'OriginalFilename', u'ScreenCapture.exe'),
         StringStruct(u'ProductName', u'Screen Monitoring Tool'),
         StringStruct(u'ProductVersion', u'1.0.0.0')])
-      ])
+      ]
     ),
     VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
   ]
