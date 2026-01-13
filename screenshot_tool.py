@@ -12,6 +12,7 @@ import time
 import json
 import logging
 import socket
+from abc import ABC, abstractmethod
 from datetime import datetime
 from io import BytesIO
 
@@ -146,66 +147,17 @@ class ScreenCapture:
 
 
 # ============================================================================
-# 网络上传模块
+# 存储后端模块
 # ============================================================================
 
-class Uploader:
-    """文件上传类"""
-    
-    def __init__(self, config):
-        self.server_url = config['server_url']
-        self.api_key = config['api_key']
-        self.max_retries = config['max_retries']
-        self.timeout = (config['timeout_connect'], config['timeout_read'])
-    
-    def upload(self, image_data, filename):
-        """
-        上传截图到服务器
-        返回: True/False
-        """
-        for attempt in range(1, self.max_retries + 1):
-            try:
-                # 准备文件数据
-                files = {
-                    'file': (filename, image_data, 'image/jpeg')
-                }
-                
-                # 准备请求头
-                headers = {}
-                if self.api_key:
-                    headers['X-API-Key'] = self.api_key
-                
-                # 发送POST请求
-                response = requests.post(
-                    self.server_url,
-                    files=files,
-                    headers=headers,
-                    timeout=self.timeout
-                )
-                
-                # 检查响应
-                if response.status_code == 200:
-                    logging.info(f"上传成功: {filename}")
-                    return True
-                else:
-                    logging.warning(f"上传失败 (尝试 {attempt}/{self.max_retries}): "
-                                  f"HTTP {response.status_code} - {response.text[:100]}")
-                
-            except requests.exceptions.Timeout:
-                logging.warning(f"上传超时 (尝试 {attempt}/{self.max_retries}): {filename}")
-            except requests.exceptions.ConnectionError:
-                logging.warning(f"网络连接失败 (尝试 {attempt}/{self.max_retries}): {filename}")
-            except Exception as e:
-                logging.error(f"上传异常 (尝试 {attempt}/{self.max_retries}): {e}", exc_info=True)
-            
-            # 如果不是最后一次尝试，等待后重试（指数退避）
-            if attempt < self.max_retries:
-                wait_time = 2 ** (attempt - 1)  # 1s, 2s, 4s
-                logging.info(f"等待 {wait_time} 秒后重试...")
-                time.sleep(wait_time)
-        
-        logging.error(f"上传最终失败: {filename}")
-        return False
+# 导入存储后端模块
+try:
+    from storage_backends import create_storage_backend
+except ImportError:
+    # 如果模块不在同一目录，尝试从当前目录导入
+    import sys
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from storage_backends import create_storage_backend
 
 
 # ============================================================================
@@ -238,13 +190,18 @@ def main():
     
     logging.info("=" * 60)
     logging.info("Windows 自动截图工具启动")
-    logging.info(f"服务器地址: {config['server_url']}")
     logging.info(f"截图间隔: {config['interval_seconds']} 秒")
     logging.info(f"JPEG质量: {config['jpeg_quality']}%")
-    logging.info("=" * 60)
     
-    # 创建上传器
-    uploader = Uploader(config)
+    # 创建存储后端
+    try:
+        storage = create_storage_backend(config)
+        storage_type = config.get('storage_type', 'http')
+        logging.info(f"存储后端: {storage_type.upper()}")
+        logging.info("=" * 60)
+    except Exception as e:
+        logging.error(f"创建存储后端失败: {e}", exc_info=True)
+        sys.exit(1)
     
     # 主循环
     try:
@@ -257,10 +214,11 @@ def main():
                 
                 # 上传并立即清理内存
                 if image_data and filename:
-                    uploader.upload(image_data, filename)
+                    storage.upload(image_data, filename)
                     # 显式删除图片数据，释放内存（本地不留存）
                     del image_data
                     del filename
+
                 
                 # 计算需要等待的时间，确保精确间隔
                 elapsed = time.time() - loop_start
