@@ -17,7 +17,7 @@ build/
 *.swp
 *.swo
 
-# Project specific
+# Project specific - user config only
 config.json
 logs/
 screenshots/
