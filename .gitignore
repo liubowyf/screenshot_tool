@@ -1,0 +1,32 @@
+# 排除目录
+build/
+dist/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# PyInstaller
+*.spec
+
+# 配置文件（用户特定）
+# config.json  # 不忽略，保留模板
+
+# 测试文件
+test_*.py
+*.jpg
+*.png
+
+# macOS
+.DS_Store
